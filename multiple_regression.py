@@ -167,7 +167,8 @@ def output(data_dict, variables, coefficients, intercept, residuals):
     SST = 0
     for i in data_dict[variables[0]]:
         SST += (i - y_mean) ** 2
-    print(f"R squared: {1 - (SSR / SST):.4f}\n")
+    print(f"R squared: {1 - (SSR / SST):.4f}")
+    print("--------------------------------------")
 
 def main():
     # handle file input
