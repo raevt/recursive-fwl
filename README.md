@@ -2,7 +2,13 @@ This repository includes a Python program to estimate multiple regression models
 
 # Files and usage
 
-# [multiple_regression.py](/multiple_regression.py)
+File: [multiple_regression.py](/multiple_regression.py)
+
+Be sure that the data is in a .csv, and:
+- the first row is the names of the variables
+- the first column is the dependent variable
+- there are no missing observations
+
 
 # What does this do? (i.e., the theory)
 

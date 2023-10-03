@@ -6,7 +6,7 @@
     This is far from efficient, but it works. I've tested it out to 5 independent variables, running the same regressions in Stata and receiving the same results.
 
     Be sure that the data is in a .csv, and:
-     - the first row are the names of the variables
+     - the first row is the names of the variables
      - the first column is the dependent variable
      - there are no missing observations
 """
