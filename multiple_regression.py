@@ -1,7 +1,7 @@
 """
     Rae Adimer
 
-    Estimates a multiple regression using a series of partialled-out linear regressions. Returns estimated model and R-squared.
+    Estimates a multiple regression using a series of partialled-out linear regressions. Prints estimated model and R-squared.
 
     This is far from efficient, but it works. I've tested it out to 5 independent variables, running the same regressions in Stata and receiving the same results.
 
