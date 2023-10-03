@@ -16,7 +16,7 @@ The Frisch-Waugh-Lovell Theorem, referred to as "partialling out", allows the es
 
 When I first learned of this approach, I had a very rabbit-hole inducing thought: is it possible to recursively partial out regressions such that a multiple regression of any number of independent variables can be estimated with a series of simple linear regressions?
 
-Consider a regression model with one dependent variable and two independent variables. To estimate the coefficient on the first independent variable, we can run a simple linear regression of that variable on the other independent variable, and a second simple linear regression of the dependent variable on the residuals of that model. The coefficient on those residuals is the ceofficient of that independent variable in the multiple regression model.
+Consider a regression model with one dependent variable and two independent variables. To estimate the coefficient on the first independent variable, we can run a simple linear regression of that variable on the other independent variable, and a second simple linear regression of the dependent variable on the residuals of that model. The coefficient on those residuals is the coefficient of that independent variable in the multiple regression model.
 
 ![Process for 2 independent variables](/images/two%20independent%20variables.png)
 
