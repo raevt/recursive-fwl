@@ -1,4 +1,4 @@
-This repository includes a Python program to estimate multiple regression models via OLS without any matrix algebra. This is done using the Frisch-Waugh-Lovell Theorem in a cascading manner, allowing the reduction of a multiple regression into a series of simple linear regressions.
+This repository includes a Python program to estimate multiple regression models via OLS without any matrix algebra. This is done using the [Frisch-Waugh-Lovell Theorem](https://en.wikipedia.org/wiki/Frisch–Waugh–Lovell_theorem) in a cascading manner, allowing the reduction of a multiple regression into a series of simple linear regressions.
 
 # Files and usage
 
@@ -12,7 +12,7 @@ Be sure that the data is in a .csv, and:
 
 # What does this do? (i.e., the theory)
 
-The [Frisch-Waugh-Lovell Theorem](https://en.wikipedia.org/wiki/Frisch–Waugh–Lovell_theorem), referred to as "partialling out", allows the estimation of an independent variable's coefficient in a multiple regression through a regression of the dependent variable on the residuals from a regression of that independent variable on all other independent variables.
+The Frisch-Waugh-Lovell Theorem, referred to as "partialling out", allows the estimation of an independent variable's coefficient in a multiple regression through a regression of the dependent variable on the residuals from a regression of that independent variable on all other independent variables.
 
 When I first learned of this approach, I had a very rabbit-hole inducing thought: is it possible to recursively partial out regressions such that a multiple regression of any number of independent variables can be estimated with a series of simple linear regressions?
 
