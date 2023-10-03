@@ -11,6 +11,9 @@
      - there are no missing observations
 """
 
+# Declare global variables for counting regressions
+DOWN_COUNTER = 0
+UP_COUNTER = 0
 
 def input_data(filename):
     # Gets data from specified file, returns dictionary and list of variables
@@ -87,6 +90,8 @@ def multiple_regression(data_dict, variables):
 
     if len(variables) == 2:
         coeff, interc, residu = simple_linear_regression(data_dict[variables[0]], data_dict[variables[1]])
+        global DOWN_COUNTER
+        DOWN_COUNTER += 1
         coefficients.append(coeff)
         return coefficients, interc, residu
     
@@ -98,6 +103,8 @@ def multiple_regression(data_dict, variables):
         for n in new_vars_list:
            n_coefficients, n_intercept, n_residuals = multiple_regression(data_dict.copy(), n.copy())
            s_coefficient, s_intercept, s_residuals = simple_linear_regression(data_dict[y_key], n_residuals)
+           global UP_COUNTER
+           UP_COUNTER += 1
            coefficients.append(s_coefficient)
         
         # Intercept calculation
@@ -134,16 +141,17 @@ def output(data_dict, variables, coefficients, intercept, residuals):
     # Formats and prints output, including calculating r-squared
 
     # Variables information
-    print("Variables: ", end="")
+    print("\nVariables: ", end="")
     for i in variables:
         if i == variables[-1]:
             print(i)
         else:
             print(i, end=", ")
     print(f"Dependent variables: 1 ({variables[0]})\nIndependent variables: {len(variables)-1}\nObservations: {len(data_dict[variables[0]])}")
-
+    print(f"Number of simple linear regressions: {DOWN_COUNTER + UP_COUNTER} (Down: {DOWN_COUNTER}, Up: {UP_COUNTER})")
+    
     # Estimated model
-    print(f"{variables[0]} = ", end="")
+    print(f"\n{variables[0]} = ", end="")
     for n in range(len(variables)-1):
         print(f"{coefficients[n]:.4f}{variables[n+1]} + ", end="")
     print(f"{intercept:.4f}")
@@ -159,10 +167,11 @@ def output(data_dict, variables, coefficients, intercept, residuals):
     SST = 0
     for i in data_dict[variables[0]]:
         SST += (i - y_mean) ** 2
-    print(f"R squared: {1 - (SSR / SST):.4f}")
+    print(f"R squared: {1 - (SSR / SST):.4f}\n")
 
 def main():
     # handle file input
+    print("------- multiple_regression.py -------")
     filename = str(input("Enter the name of your file: "))
     try:
         data_dict, variables = input_data(filename)
