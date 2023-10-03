@@ -1,4 +1,4 @@
-This repository includes a Python program to estimate multiple regression models via OLS without any matrix algebra. This is done using the [Frisch-Waugh-Lovell Theorem](https://en.wikipedia.org/wiki/Frisch–Waugh–Lovell_theorem) in a recursive manner, allowing the reduction of a multiple regression into a series of simple linear regressions.
+This repository includes a Python program to estimate multiple regression models via OLS without any matrix algebra. This is done using the [Frisch-Waugh-Lovell Theorem](https://en.wikipedia.org/wiki/Frisch–Waugh–Lovell_theorem) in a recursive manner, allowing the reduction of a multiple regression with k independent variables into a series of k! simple linear regressions.
 
 # Files and usage
 
