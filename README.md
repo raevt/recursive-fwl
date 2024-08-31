@@ -1,4 +1,4 @@
-This repository includes a Python program to estimate multiple regression models via OLS without any matrix algebra. This is done using the [Frisch-Waugh-Lovell Theorem](https://en.wikipedia.org/wiki/Frisch–Waugh–Lovell_theorem) in a recursive manner, allowing the estimation of a multiple regression model with a series of simple linear regressions.
+This repository includes a Python program to estimate multiple linear regression models with a series of bivariate linear regressions by recursively applying the [Frisch-Waugh-Lovell Theorem](https://en.wikipedia.org/wiki/Frisch–Waugh–Lovell_theorem) (FWL).
 
 # Files and usage
 
@@ -9,33 +9,56 @@ Be sure that the data is in a .csv, and:
 - the first column is the dependent variable
 - there are no missing observations
 
+# What is FWL?
 
-# What does this do? (i.e., the theory)
+Assume we intend to estimate $\hat{\beta}_{j}$ in the MLR: $\hat{y}=\hat{\beta}_{j}x_{j}+...\hat{\beta}_{k}x_{k}+\epsilon$ 
 
-The Frisch-Waugh-Lovell Theorem, referred to as "partialling out", allows the estimation of an independent variable's coefficient in a multiple regression through a regression of the dependent variable on the residuals from a regression of that independent variable on all other independent variables.
+The FWL theorem shows that $\hat{\beta}_{j}=\hat{\beta}^{*}_{j}$ from:
 
-When I first learned of this approach, I had a very rabbit-hole inducing thought: is it possible to recursively partial out regressions such that a multiple regression of any number of independent variables can be estimated with a series of simple linear regressions?
+$\hat{y}^{*}=\hat{\beta}^{*}_{j}\epsilon_{j}+\epsilon^{*}$
 
-Consider a regression model with one dependent variable and two independent variables. To estimate the coefficient on the first independent variable, we can run a simple linear regression of that variable on the other independent variable, and a second simple linear regression of the dependent variable on the residuals of that model. The coefficient on those residuals is the coefficient of that independent variable in the multiple regression model.
+where $\epsilon_{j}=\epsilon_{j}^{*}$ from the auxiliary regression: 
 
-![Process for 2 independent variables](/images/two%20independent%20variables.png)
+$\hat{x}^{*}_{j}=\hat{\beta}^{*}_{1}x_{1}+...\hat{\beta}^{*}_{k}x_{k}+\epsilon^{*}_{j}$
 
-The primary takeaway here is that a multiple regression with two independent variables can be calculated as two linear regressions, which can easily be estimated without matrix algebra.
+Intuitively, $\epsilon_{j}^{*}$ represents the part of $x_{j}$ that is unexplained by variation in the $k$ other covariates. A regression of $y$ on $\epsilon_{j}$ thus yields a coefficient that is equal to $\hat{\beta}_{j}$ in the main MLR.
 
-For a multiple regression with k independent variables:
+# What does this script do?
 
-![Process for k independent variables](/images/k%20independent%20variables.png)
+It applies FWL recursively, where the base case is a bivariate regression.
 
-Each variable's coefficient is estimated through a regression of y on the residuals from a regression of that variable on all other variables. For simplicity, I'll call these regressions (of each x on all other x's) "second-level regressions", because they are one "step down" from the initial regression.
 
-Each second-level regression has one fewer independent variable than the initial regression. In other words, a multiple regression of k independent variables can be estimated through regressions of y on the residuals from the k second-level regressions. Each of those second-level regressions has k-1 independent variables.
+# How many bivariate regressions result from recursive FWL?
+A MLR with $k$ covariates is estimated with $k!$ auxiliary bivariate regressions.
 
-This can be done recursively. Because any multiple regression can be estimated with k regressions of k-1 independent variables, and we know that a regression where k=2 can be estimated with two simple linear regressions, we can apply partialing out to a multiple regression recursively until every component regression has k=2. In other words, a multiple regression of any size can be estimated with some number of simple linear regressions. So, what is the function for that number?
+As an intuitive proof of this, think of it like a leveled tree that expands from the main MLR. Consider a MLR with 5 covariates; in the first level, each covariate is regressed on the 4 other covariates, resulting in 5 regressions of 4 covariates each. Repeating this process on the second level, there are 20 regressions of 3 covariates. On the fourth level, 60 regressions of 2 covariates. And on the fifth level, 120 bivariate regressions. This is $k$ levels and $k!$ resulting auxiliary bivariate regressions.
 
-With k=2, the answer is 2 simple linear regressions, as shown above. With k=3, each independent variable's coefficient is regressed on the other two independent variables, creating three multiple regressions with two independent variables each. Each of those three regressions are then estimated with two linear regressions, resulting in 6 simple linear regressions.
+The $k!$ number does not include the bivariate regressions on the residuals of the auxiliary regressions, which are what yield the coefficients for each regression in the tree. The number of these coefficient-yielding regressions is the total number of coefficients in the tree, which is the sum of the number of coefficients at each level:
 
-It seems the function for the number of simple linear regressions needed to estimate a multiple regression is k!:
+$\Sigma^{k}_{j=1}\frac{k!}{(k-j)!}$
 
-Consider a situation with 5 independent variables. We start with 5 linear regressions of 4 independent variables each. Then, 5\*4=20 linear regressions, of 3 independent variables each. Then, 20\*3=60 linear regressions, of 2 independent variables each. Then, 60\*2=120 simple linear regressions. In other words, with k=5, you need 5\*4\*3\*2\*1=120, or 5!, simple linear regressions. This pattern is the same for any value of k.
+This is similarly straightforward to explain intuitively.
 
-In arriving at k!, I only considered what I'll call "moving down" regressions, i.e., the number of simple linear regressions resulting from partialing out regressions with k independent variables into k regressions of k-1 independent variables in a cascading manner, until only simple linear regressions remain. I did not consider the regressions used in "moving up" this chain, i.e., the regressions of the dependent variable of each model on the residuals of its partialed-out regressions.
+At each level, the number of coefficients is equal to the number of regressions multiplied by the number of covariates in each regression. Sticking with the example of $k=5$, we therefore know that the first level has 5 coefficients, the second 20, the third 60, the fourth 120, and the fifth also 120. This, in total, sums to 325.
+
+The value of the expression where $j=1$ corresponds to the number of coefficients on the first level:
+
+$\frac{5!}{(5-1)!}=\frac{(5)(5-1)(5-2)(5-3)(5-4)}{(5-1)(5-2)(5-3)(5-4)}=5$
+
+I think of this as *dividing out* the eventual expansion in coefficients that has not occured on a given level. For example, level 2's denominator removes the $(5-1)$ from the above term, reflecting that expansion:
+
+$\frac{5!}{(5-2)!}=\frac{(5)(5-1)(5-2)(5-3)(5-4)}{(5-2)(5-3)(5-4)}=5*4=20$
+
+In full:
+
+$\Sigma^{5}_{j=1}\frac{5!}{(5-j)!}=\frac{5!}{(5-1)!}+\frac{5!}{(5-2)!}+\frac{5!}{(5-3)!}+\frac{5!}{(5-4)!}+\frac{5!}{(5-5)!}\\=\frac{(5)(5-1)(5-2)(5-3)(5-4)}{(5-1)(5-2)(5-3)(5-4)}+\frac{(5)(5-1)(5-2)(5-3)(5-4)}{(5-2)(5-3)(5-4)}+\frac{(5)(5-1)(5-2)(5-3)(5-4)}{(5-3)(5-4)}+\frac{(5)(5-1)(5-2)(5-3)(5-4)}{(5-4)}+\frac{(5)(5-1)(5-2)(5-3)(5-4)}{1}\\=5+(5*4)+(5*4*3)+(5*4*3*2)+(5*4*3*2*1)\\=5+20+60+120+120\\=325$
+
+The summation can also be thought of as the sum of component parts of $k!$. E.g., it is as though I performed the operation $k!$, recorded the value after each multiplication operation, and summed those values.
+
+As an aside, this is a fun illustration of the relevance of $0!=1$. It is necessary to explain why levels $k$ and $k-1$ have the same number of coefficients, for in both cases the denominator is equal to 1.
+
+# Why is this useful?
+
+In undergraduate econometrics education, the FWL theorem is often used to explain the effect of controlling for a variable in OLS-estimated multiple linear regression. The theorem fills in for the intuitive reasoning that would have otherwise come from studying regression's matrix notation.
+
+FWL can be a bit circular, in that (for k>2) you're using a multiple regression to explain a multiple regression. In its recursive form, however, MLR models can be estimated with a series of bivariate regressions, which students may more effectively understand.
