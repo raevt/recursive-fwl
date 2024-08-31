@@ -15,7 +15,7 @@ Assume we intend to estimate $\hat{\beta}_{j}$ in the MLR: $\hat{y}=\hat{\beta}_
 
 The FWL theorem shows that $\hat{\beta}_{j}=\hat{\beta}^{*}_{j}$ from:
 
-$\hat{y}^{*}=\hat{\beta}^{*}_{j}\epsilon_{j}+\epsilon^{*}$
+$`\hat{y}^{*}=\hat{\beta}^{*}_{j}\epsilon_{j}+\epsilon^{*}`$
 
 where $\epsilon_{j}=\epsilon_{j}^{*}$ from the auxiliary regression: 
 
