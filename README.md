@@ -19,7 +19,7 @@ $`\hat{y}^{*}=\hat{\beta}^{*}_{j}\epsilon_{j}+\epsilon^{*}`$
 
 where $`\epsilon_{j}=\epsilon_{j}^{*}`$ from the auxiliary regression: 
 
-$`\hat{x}^{*}_{j}=\hat{\beta}^{*}_{1}x_{1}+...\hat{\beta}^{*}_{k}x_{k}+\epsilon^{*}_{j}`$
+$`\hat{x}^{*}_{j}=\hat{\beta}^{*}_{1}x_{1}+...\hat{\beta}^{*}_{k-1}x_{k-1}+\epsilon^{*}_{j}`$
 
 Intuitively, $`\epsilon_{j}^{*}`$ represents the part of $`x_{j}`$ that is unexplained by variation in the $k$ other covariates. A regression of $y$ on $`\epsilon_{j}`$ thus yields a coefficient that is equal to $`\hat{\beta}_{j}`$ in the main MLR.
 
