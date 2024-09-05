@@ -19,7 +19,7 @@ $`b=(X'X)^{-1}X'y`$
 
 where $b$ is a $k \times 1$ matrix of estimated $\beta$
 
-First, we find $X'$. The transpose of a matrix interchanges the rows and columns along the diagonal. Given that $X$ is $n \times k$, $X'$ will be $k \times n$:
+First, we find $X'$:
 
 $`X'=\left[{\begin{array}{ccccc}1 & 2 & 3 & 4 & 5\end{array}}\right]`$
 
